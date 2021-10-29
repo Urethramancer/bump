@@ -3,19 +3,22 @@ package main
 import (
 	"os"
 
-	git "gopkg.in/src-d/go-git.v4"
+	"github.com/Urethramancer/signor/opt"
+	git "github.com/go-git/go-git/v5"
 )
 
-func init() {
-	for _, x := range os.Args {
-		if x == "-h" {
-			showHelp()
-			os.Exit(0)
-		}
-	}
+var o struct {
+	opt.DefaultHelp
+	Part string `placeholder:"PART" help:"The part of the version to bump"`
 }
 
 func main() {
+	a := opt.Parse(&o)
+	if o.Help {
+		a.Usage()
+		return
+	}
+
 	repo, err := git.PlainOpen(".")
 	if err != nil {
 		if err == git.ErrRepositoryNotExists {
@@ -65,6 +68,7 @@ func main() {
 		os.Exit(2)
 	}
 
+	print(head.Name())
 	tagger := NewTagger(user, mail)
 	err = AddAnnotatedTag(repo, tagger, version, head.Strings()[1])
 	if err != nil {

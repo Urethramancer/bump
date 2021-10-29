@@ -2,4 +2,14 @@ module github.com/Urethramancer/bump
 
 go 1.16
 
-require gopkg.in/src-d/go-git.v4 v4.13.1
+require (
+	github.com/Microsoft/go-winio v0.5.1 // indirect
+	github.com/Urethramancer/signor v0.16.0
+	github.com/go-git/go-git/v5 v5.4.2
+	github.com/kevinburke/ssh_config v1.1.0 // indirect
+	github.com/sergi/go-diff v1.2.0 // indirect
+	github.com/xanzy/ssh-agent v0.3.1 // indirect
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
+	golang.org/x/net v0.0.0-20211020060615-d418f374d309 // indirect
+	golang.org/x/sys v0.0.0-20211025201205-69cdffdb9359 // indirect
+)

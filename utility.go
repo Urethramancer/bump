@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -10,13 +9,6 @@ import (
 
 func pr(f string, v ...interface{}) {
 	fmt.Printf(f+"\n", v...)
-}
-
-func showHelp() {
-	pr("%s increases the version number of a semver-conformant git repository, based on the most recent annotated tag.\n", os.Args[0])
-	pr("Usage:")
-	pr("%s <segment>", os.Args[0])
-	pr("Possible keywords are 'major', 'minor' and 'patch' with the shortcuts 'ma', 'mi' or 'p'.")
 }
 
 func isSemVer(ver string) bool {
@@ -68,8 +60,6 @@ func BumpVersion(ver, part string) (string, error) {
 		patch = 0
 	case "patch", "p":
 		patch++
-	default:
-		pr("Unknown command. Bailing out.")
 	}
 
 	var version string

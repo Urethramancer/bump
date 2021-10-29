@@ -1,16 +1,43 @@
 {
-	"version": "0.1.0",
-	"isShellCommand": true,
-	"command": "./build",
-	"showOutput": "never",
-	"suppressTaskName": true,
-	"tasks": [
-		{
-			"taskName": "build program",
-			"isBuildCommand": true,
+	"version": "2.0.0",
+	"type": "shell",
+	"problemMatcher": ["$go"],
+	"tasks": [{
+			"label": "Build Release",
+			"command": "go",
 			"args": [
-				""
-			]
+				"build",
+				"-ldflags",
+				"\"-w -s\""
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "silent",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": false
+			}
+		},
+		{
+			"label": "Build Debug",
+			"command": "go",
+			"args": [
+				"build"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "silent",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			}
 		}
 	]
 }
