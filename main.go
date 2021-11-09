@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/Urethramancer/bump/semver"
 	"github.com/Urethramancer/signor/opt"
 	git "github.com/go-git/go-git/v5"
 )
@@ -35,6 +36,8 @@ func main() {
 		pr("Error: %s. Have you made any commits?", err.Error())
 		os.Exit(2)
 	}
+	println(head.String())
+	println("")
 
 	tags, err := GetTags(repo)
 	if err != nil {
@@ -42,39 +45,38 @@ func main() {
 		os.Exit(2)
 	}
 
-	var last string
-	if len(tags) < 1 {
-		last = "v0.0.0"
-	} else {
-		last = tags[len(tags)-1]
-	}
-
-	if !isSemVer(last) {
-		pr("%s doesn't conform to a valid semantic version structure.", last)
-		os.Exit(1)
+	list := semver.SemVerList{}
+	for _, t := range tags {
+		list = append(list, semver.New(t))
 	}
 
 	user := os.Getenv("GITUSER")
 	mail := os.Getenv("GITMAIL")
+	last := list.Last()
 	pr("Latest version is %s", last)
 	pr("Committing as %s <%s>", user, mail)
 	if len(os.Args) == 1 {
 		return
 	}
 
-	version, err := BumpVersion(last, os.Args[1])
-	if err != nil {
-		pr("Error bumping version: %s", err.Error())
+	switch os.Args[1] {
+	case "major", "ma":
+		last.Bump(semver.Major)
+	case "minor", "mi":
+		last.Bump(semver.Minor)
+	case "patch", "p":
+		last.Bump(semver.Patch)
+	default:
+		pr("Unknown part: %s", os.Args[1])
 		os.Exit(2)
 	}
 
-	print(head.Name())
 	tagger := NewTagger(user, mail)
-	err = AddAnnotatedTag(repo, tagger, version, head.Strings()[1])
+	err = AddAnnotatedTag(repo, tagger, last.String(), head.Strings()[1])
 	if err != nil {
 		pr("Error adding annotated tag: %s", err.Error())
 		os.Exit(2)
 	}
 
-	pr("The new version is %s", version)
+	pr("The new version is %s", last.String())
 }
