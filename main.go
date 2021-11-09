@@ -10,7 +10,7 @@ import (
 
 var o struct {
 	opt.DefaultHelp
-	Part string `placeholder:"PART" help:"The part of the version to bump"`
+	Part string `placeholder:"PART" help:"The part of the version to bump" choices:"major,minor,patch,ma,mi,p"`
 }
 
 func main() {
@@ -59,7 +59,7 @@ func main() {
 		return
 	}
 
-	switch os.Args[1] {
+	switch o.Part {
 	case "major", "ma":
 		last.Bump(semver.Major)
 	case "minor", "mi":
@@ -67,8 +67,7 @@ func main() {
 	case "patch", "p":
 		last.Bump(semver.Patch)
 	default:
-		pr("Unknown part: %s", os.Args[1])
-		os.Exit(2)
+		pr("Unknown part: %s", o.Part)
 	}
 
 	tagger := NewTagger(user, mail)
