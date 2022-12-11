@@ -1,8 +1,27 @@
 {
 	"version": "2.0.0",
 	"type": "shell",
-	"problemMatcher": ["$go"],
-	"tasks": [{
+	"problemMatcher": [
+		"$go"
+	],
+	"tasks": [
+		{
+			"label": "go mod tidy",
+			"type": "shell",
+			"command": "go mod tidy",
+			"presentation": {
+				"echo": true,
+				"reveal": "silent",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": true
+			},
+			"problemMatcher": [
+				"$go"
+			],
+		},
+		{
 			"label": "Build Release",
 			"command": "go",
 			"args": [
@@ -20,7 +39,7 @@
 				"focus": false,
 				"panel": "shared",
 				"showReuseMessage": false,
-				"clear": false
+				"clear": true
 			}
 		},
 		{
@@ -35,8 +54,8 @@
 				"reveal": "silent",
 				"focus": false,
 				"panel": "shared",
-				"showReuseMessage": true,
-				"clear": false
+				"showReuseMessage": false,
+				"clear": true
 			}
 		}
 	]

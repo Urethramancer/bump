@@ -1,25 +1,40 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/Urethramancer/bump/semver"
-	"github.com/Urethramancer/signor/opt"
 	git "github.com/go-git/go-git/v5"
+	"github.com/grimdork/climate/arg"
 )
 
 var o struct {
-	opt.DefaultHelp
+	// opt.DefaultHelp
 	Part string `placeholder:"PART" help:"The part of the version to bump" choices:"major,minor,patch,ma,mi,p"`
 }
 
 func main() {
-	a := opt.Parse(&o)
-	if o.Help {
-		a.Usage()
-		return
+	opt := arg.New("bump")
+	opt.SetDefaultHelp(true)
+	opt.SetPositional("PART", "The part of the version to bump", "", true, arg.VarString)
+	var err error
+	err = opt.Parse(os.Args)
+	if err != nil {
+		if err == arg.ErrNoArgs {
+			opt.PrintHelp()
+			return
+		}
+
+		if err == arg.ErrRunCommand {
+			return
+		}
+
+		fmt.Printf("Error: %s\n", err.Error())
+		os.Exit(2)
 	}
 
+	part := opt.GetPosString("PART")
 	repo, err := git.PlainOpen(".")
 	if err != nil {
 		if err == git.ErrRepositoryNotExists {
@@ -59,7 +74,7 @@ func main() {
 		return
 	}
 
-	switch o.Part {
+	switch part {
 	case "major", "ma":
 		last.Bump(semver.Major)
 	case "minor", "mi":
