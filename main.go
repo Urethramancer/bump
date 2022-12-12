@@ -9,17 +9,12 @@ import (
 	"github.com/grimdork/climate/arg"
 )
 
-var o struct {
-	// opt.DefaultHelp
-	Part string `placeholder:"PART" help:"The part of the version to bump" choices:"major,minor,patch,ma,mi,p"`
-}
-
 func main() {
 	opt := arg.New("bump")
 	opt.SetDefaultHelp(true)
-	opt.SetPositional("PART", "The part of the version to bump", "", true, arg.VarString)
+	opt.SetPositional("PART", "The part of the version to bump. Choices are major, minor, patch or the shorthand ma, mi and p.", "", true, arg.VarString)
 	var err error
-	err = opt.Parse(os.Args)
+	err = opt.Parse(os.Args[1:])
 	if err != nil {
 		if err == arg.ErrNoArgs {
 			opt.PrintHelp()
@@ -35,6 +30,7 @@ func main() {
 	}
 
 	part := opt.GetPosString("PART")
+	fmt.Printf("Positional string PART: %s\n", part)
 	repo, err := git.PlainOpen(".")
 	if err != nil {
 		if err == git.ErrRepositoryNotExists {
@@ -82,7 +78,8 @@ func main() {
 	case "patch", "p":
 		last.Bump(semver.Patch)
 	default:
-		pr("Unknown part: %s", o.Part)
+		pr("Unknown part: %s", part)
+		os.Exit(2)
 	}
 
 	tagger := NewTagger(user, mail)
