@@ -4,6 +4,6 @@ import (
 	"fmt"
 )
 
-func pr(f string, v ...interface{}) {
+func pr(f string, v ...any) {
 	fmt.Printf(f+"\n", v...)
 }
